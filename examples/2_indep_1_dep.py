@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 """
 
-	2_indep_1_dep.py 
+    2_indep_1_dep.py 
 
 Carpet plot of two independant variables against one dependant  
 
