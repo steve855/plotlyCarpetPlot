@@ -5,9 +5,9 @@
 
 Plotly class for generating carpet plot 
 
-Copyright (c) 2004-2013 by pyACDT Developers
+Copyright (c) 2014 by Stephen Andrews
 All rights reserved.
-Revision: Stephen Andrews - $Date: 02/04/2014$
+Revision: Stephen Andrews - $Date: 18/06/2014$
 
 
 Developers:
@@ -52,7 +52,7 @@ class CarpetPlot:
 
     def __init__(self, x1, x2, y, ofst = 1.0, ofst2 = 0.0, figure = None, x1_skip = 1, x2_skip = 1, idep2_style = None,
         label1 = '', label2 = '',  label1_loc = 'end', label2_loc = 'end', label1_ofst = (15, 0), label2_ofst = (15, 0), 
-        title = '', title_loc = (1.0, 0.9), dep_title = '', x_cheat_out = None):
+        title = '', dep_title = ''):
         # contour_data = None, contour_format = [{}], clabel_format = {},
         '''
 
@@ -94,14 +94,14 @@ class CarpetPlot:
         - label1_ofst -> 2-TUPPLE: X and Y offset, in pixels, from the selected vertex 
         - label2_ofst -> 2-TUPPLE: X and Y offset, in pixels, from the selected vertex
         - title -> STR: String to place above the carpet plot
-        - title_loc -> 2-TUPPLE: X and Y modifiers for the title location 
-                - [0] modifier to the midpoint of the x range 
-                - [1] modifier to the max y point
         - dep_title -> STR: Title to append to the dependent axis
-        - x_cheat_out -> LIST: IO variable for cheater axis values
 
 
         **Depricated**
+        - title_loc -> 2-TUPPLE: X and Y modifiers for the title location 
+                - [0] modifier to the midpoint of the x range 
+                - [1] modifier to the max y point
+        - x_cheat_out -> LIST: IO variable for cheater axis values
         - contour_data - > LIST of (n x m) numpy.array: List of  matrices of dependent values to plot as a contour. *Default: None*
         - contour_format -> LIST of DICT: List of Dictionaries of contour formating inputs 
         - cabel_format -> LIST DICT: List of Dictionaries of contour label formating inputs 
@@ -136,14 +136,18 @@ class CarpetPlot:
         data = []
         annotations = []
         for i in xrange(0,len(x1),x1_skip):
-            data.append(Scatter(x = x_cheat[:,i], y = y[:,i], line = Line(color = 'black', dash = 'solid')))
+            text = []
+            for j in xrange(len(y[:,i])):
+                text.append("{:} = {:3.2f}, {:} = {:3.2f}".format(label1, x1[i], label2, x2[j]))
+            #end
+            data.append(dict(type = 'scatter', x = x_cheat[:,i], y = y[:,i], text = text, name = '', line = Line(color = 'black', dash = 'solid')))#, hoverinfo='none'))
             if not label1_loc == None:            
                 annotations.append(Annotation(text = '{:}={:3.2f}'.format(label1, x1[i]),  x = x_cheat[label1_loc,i], y =  y[label1_loc,i], ax = label1_ofst[0], ay = label1_ofst[1], xanchor = 'x1', yanchor = 'y1', arrowcolor = 'grey', showarrow = True))
             #end
         #end
 
         for i in xrange(0,len(x2),x2_skip):
-            data.append(Scatter(x = x_cheat[i,:], y = y[i,:], line = Line(color = 'black', dash = 'solid')))
+            data.append(dict(type = 'scatter', x = x_cheat[i,:], y = y[i,:], text = ['']*len(y[i,:]), name = '', line = Line(color = 'black', dash = 'solid')))#, hoverinfo='none'))
             if not label2_loc == None:
                 annotations.append(Annotation(text = '{:}={:3.2f}'.format(label2, x2[i]), x = x_cheat[i,label2_loc], ax = label2_ofst[0], y = y[i,label2_loc], ay = label2_ofst[1], xanchor = 'x1', yanchor = 'y1', arrowcolor = 'grey', showarrow = True))
             #end
@@ -152,7 +156,7 @@ class CarpetPlot:
         #>>>Depricated contour plot
         #>>>Depricated contour plot
         annotations = Annotations(annotations)
-        self.layout = Layout(title = title, showlegend = False, xaxis = XAxis(showticklabels = False), yaxis = YAxis(title = dep_title), annotations = annotations)
+        self.layout = Layout(title = title, showlegend = False, xaxis = XAxis(showticklabels = False), yaxis = YAxis(title = dep_title), hovermode = 'y', annotations = annotations)
         self.data = Data(data)
 
         return 
@@ -184,5 +188,6 @@ if __name__ == '__main__':
 
     # pdb.set_trace()
     cplot = CarpetPlot(x1,x2,fobj.T, ofst = 3, label1 = 'x1', label2 = 'x2', label1_loc = 'end', label1_ofst = (40,1), label2_ofst = (1,-30), dep_title = 'Dependant Variable')
+    cplot = CarpetPlot(x1,x2,fobj.T, ofst = 3, label1 = 'x1', label2 = 'x2', label1_loc = None, label2_loc = None, label1_ofst = (40,1), label2_ofst = (1,-30), dep_title = 'Dependant Variable')
     figure = Figure(data = cplot.data, layout = cplot.layout)
     py.plot(figure, filename = 'carpet plot test', overwrite = True)
