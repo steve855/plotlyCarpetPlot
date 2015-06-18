@@ -138,14 +138,14 @@ class CarpetPlot:
         for i in xrange(0,len(x1),x1_skip):
             data.append(Scatter(x = x_cheat[:,i], y = y[:,i], line = Line(color = 'black', dash = 'solid')))
             if not label1_loc == None:            
-                annotations.append(Annotation(text = r'%s%3.2f'%(label1, x1[i]),  x = x_cheat[label1_loc,i], y =  y[label1_loc,i], ax = label1_ofst[0], ay = label1_ofst[1], xanchor = 'x1', yanchor = 'y1'))
+                annotations.append(Annotation(text = '{:}={:3.2f}'.format(label1, x1[i]),  x = x_cheat[label1_loc,i], y =  y[label1_loc,i], ax = label1_ofst[0], ay = label1_ofst[1], xanchor = 'x1', yanchor = 'y1', arrowcolor = 'grey', showarrow = True))
             #end
         #end
 
         for i in xrange(0,len(x2),x2_skip):
             data.append(Scatter(x = x_cheat[i,:], y = y[i,:], line = Line(color = 'black', dash = 'solid')))
             if not label2_loc == None:
-                annotations.append(Annotation(text = r'%s%3.2f'%(label2, x2[i]), x = x_cheat[i,label2_loc], ax = label2_ofst[0], y = y[i,label2_loc], ay = label2_ofst[1], xanchor = 'x1', yanchor = 'y1'))
+                annotations.append(Annotation(text = '{:}={:3.2f}'.format(label2, x2[i]), x = x_cheat[i,label2_loc], ax = label2_ofst[0], y = y[i,label2_loc], ay = label2_ofst[1], xanchor = 'x1', yanchor = 'y1', arrowcolor = 'grey', showarrow = True))
             #end
         #end
 
@@ -183,6 +183,6 @@ if __name__ == '__main__':
     contour = numpy.array(contour)
 
     # pdb.set_trace()
-    cplot = CarpetPlot(x1,x2,fobj.T, ofst = 3, label1 = r'$x_{1}$', label2 = r'$x_{2}$', label1_loc = 'end', label1_ofst = (10,1), label2_ofst = (1,10), dep_title = 'Dependant Variable')
+    cplot = CarpetPlot(x1,x2,fobj.T, ofst = 3, label1 = 'x1', label2 = 'x2', label1_loc = 'end', label1_ofst = (40,1), label2_ofst = (1,-30), dep_title = 'Dependant Variable')
     figure = Figure(data = cplot.data, layout = cplot.layout)
     py.plot(figure, filename = 'carpet plot test', overwrite = True)
