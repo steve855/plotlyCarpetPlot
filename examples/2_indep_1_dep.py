@@ -62,7 +62,7 @@ for i in xrange(len(x1)):
 #end
 fobj = numpy.array(fobj)
 
-cplot = CarpetPlot(x1,x2,fobj.T, ofst = 0.5, label1 = 'x1', label2 = 'x2', label1_loc = 'end', label1_ofst = (40,1), label2_ofst = (1,-30), dep_title = 'Dependant Variable')
+cplot = CarpetPlot(x1,x2,fobj.T, ofst = 3, label1 = 'x1', label2 = 'x2', label1_loc = 'end', label1_ofst = (40,1), label2_ofst = (1,-30), dep_title = 'Dependant Variable')
 figure = Figure(data = cplot.data, layout = cplot.layout)
 
 py.plot(figure, filename = 'carpet_plot/carpet plot test', overwrite = True)
